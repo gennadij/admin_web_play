@@ -1,0 +1,25 @@
+.area {
+	text-align:left;
+	padding : 10px;
+   margin : 10px;
+	border-color : grey;
+	border-style : solid;
+	border-width : medium;
+	/*background-color: yellow;*/
+	border-radius : 10px;
+	width : 70%;
+}
+
+.component {
+   /*box-sizing : border-box;*/
+   text-align:center;
+   padding : 2px;
+   margin : 2px;
+   border-color : #282828 ;
+   border-style : solid;
+   border-width : medium;
+   border-radius : 5px;
+   float : left;
+   /*background-color: grey;*/
+   min-width : 60px;
+}
