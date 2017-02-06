@@ -6,6 +6,7 @@ import play.api._
 import play.api.mvc._
 import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.concurrent.duration._
+import play.api.libs.json.Json
 
 /**
  * This controller creates an `Action` that demonstrates how to write
@@ -29,12 +30,14 @@ class AsyncController @Inject() (actorSystem: ActorSystem)(implicit exec: Execut
    * a path of `/message`.
    */
   def message = Action.async {
-    getFutureMessage(1.second).map { msg => Ok(msg) }
+//    getFutureMessage(1.second).map { msg => Ok(msg) }
+    getFutureMessage(1.second).map { msg => Ok(views.html.index(msg)) }
   }
 
   private def getFutureMessage(delayTime: FiniteDuration): Future[String] = {
     val promise: Promise[String] = Promise[String]()
-    actorSystem.scheduler.scheduleOnce(delayTime) { promise.success("Hi!") }
+    val jsonString = "{'test' : 'test'}"
+    actorSystem.scheduler.scheduleOnce(delayTime) { promise.success(Json.obj("test" -> "test").toString()) }
     promise.future
   }
 
