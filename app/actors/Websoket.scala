@@ -6,6 +6,7 @@ import akka.actor.ActorSystem
 import akka.stream.Materializer
 import javax.inject.Inject
 
+//https://anadea.info/blog/websockets-in-play-framework
 
 class Websoket @Inject() (implicit system: ActorSystem, materializer: Materializer) {
   def socket = WebSocket.accept[String, String] { request =>
