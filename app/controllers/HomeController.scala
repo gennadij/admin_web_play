@@ -5,9 +5,10 @@ import play.api._
 import play.api.mvc._
 import akka.actor.ActorRef
 import play.api.libs.streams.ActorFlow
-import actors.MyWebSocketActor
+import actors.WebSocketActor
 import akka.stream.Materializer
 import akka.actor.ActorSystem
+import play.api.libs.json.JsValue
 
 /**
  * This controller creates an `Action` to handle HTTP requests to the
@@ -27,7 +28,7 @@ class HomeController @Inject() (implicit system: ActorSystem, materializer: Mate
   }
 
   
-  def socket = WebSocket.accept[String, String] { request =>
-    ActorFlow.actorRef(out => MyWebSocketActor.props(out))
+  def socket = WebSocket.accept[JsValue, JsValue] { request =>
+    ActorFlow.actorRef(out => WebSocketActor.props(out))
   }
 }
