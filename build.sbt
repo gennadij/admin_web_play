@@ -37,6 +37,8 @@ val orientdbTools = "com.orientechnologies" % "orientdb-tools" % "2.2.12"
 // https://mvnrepository.com/artifact/org.specs2/specs2_2.10
 //val specs2 = "org.specs2" % "specs2_2.11" % "3.3"
 
+val admin = "org.generic_configurator" %% "admin" % "0.1.0"
+
 name := """admin_web_play"""
 
 version := "1.0-SNAPSHOT"
@@ -56,5 +58,6 @@ libraryDependencies ++= Seq(
   ,orientdbEnterprise
   ,orientdbClient
   ,orientdbTools
+  , admin
 )
 
