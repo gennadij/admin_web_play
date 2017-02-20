@@ -26,14 +26,24 @@ class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor with A
   def receive: Receive = {
     case msg: JsValue => {
       
-      context.become(withUuid(uuid, 1), true)
-      val config = new CurrentConfig()
+//      context.become(withUuid(uuid, 1), true)
+//      val config = new CurrentConfig()
       
-      config.counter = config.counter + 1
+//      config.counter = config.counter + 1
       
-      Logger.debug("Counter " + config.counter)
-      context.parent 
-      out ! handelMessage(msg)
+//      Logger.debug("Counter " + config.counter)
+      
+      val uuid = request.session.get("uuid")
+      
+      Logger.debug("UUID " + uuid.toString())
+      (request.session.get("uuid")) match {
+        case Some(uuid) => 
+          context.become(withUuid(uuid, 1), true)
+          out ! msg
+        case _ =>
+      }
+      
+//      out ! handelMessage(msg)
     }
 //      Logger.debug("Receive " + msg.toString())
 //      (msg \ "dto").asOpt[String] match {
@@ -47,12 +57,13 @@ class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor with A
   }
   
   def withUuid(uuid: String, countup: Int): Receive = {
-    Logger.debug("Counter " + countup)
-    context.parent ! Json.obj(
+    case msg: JsValue => {
+      Logger.debug("Counter " + countup)
+      context.parent ! Json.obj(
       		  				"answareToMe" -> true,
       		  				"uuid" -> uuid,
       		  				"count" -> countup)
-    context.become(withUuid(uuid,countup+1), true)
+      context.become(withUuid(uuid,countup+1), true)
+    }
   }
-  
 }

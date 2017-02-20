@@ -23,12 +23,18 @@ class HomeController @Inject() (implicit system: ActorSystem, materializer: Mate
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index = Action {
-    val uuid = java.util.UUID.randomUUID.toString
-    Logger.debug("UUID " + uuid)
-    Ok(views.html.index("Your new application is ready.")).withSession("uuid" -> uuid)
+  def index = Action { implicit request => 
+//    val uuid = java.util.UUID.randomUUID.toString
+    Ok(views.html.index("Choose one"))
   }
 
+  def indexStatefull = Action { implicit request => 
+    val uuid = java.util.UUID.randomUUID.toString
+    Logger.debug("UUID " + uuid)
+    Ok(views.html.indexStatefull("Welcome!")).withSession(
+        ("uuid" -> uuid))
+  }
+  
   
   def socket = WebSocket.accept[JsValue, JsValue] { request =>
     Logger.debug("Session " + request.session.get("uuid").toString())
