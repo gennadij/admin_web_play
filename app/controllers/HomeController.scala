@@ -24,11 +24,15 @@ class HomeController @Inject() (implicit system: ActorSystem, materializer: Mate
    * a path of `/`.
    */
   def index = Action {
-    Ok(views.html.index("Your new application is ready."))
+    val uuid = java.util.UUID.randomUUID.toString
+    Logger.debug("UUID " + uuid)
+    Ok(views.html.index("Your new application is ready.")).withSession("uuid" -> uuid)
   }
 
   
   def socket = WebSocket.accept[JsValue, JsValue] { request =>
-    ActorFlow.actorRef(out => WebSocketActor.props(out))
+    Logger.debug("Session " + request.session.get("uuid").toString())
+    
+    ActorFlow.actorRef(out => WebSocketActor.props(out, request))
   }
 }
