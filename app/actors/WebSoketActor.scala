@@ -8,7 +8,6 @@ import javax.inject.Inject
 import akka.actor._
 import scala.Some
 import play.api.libs.json.Json
-import org.admin.AdminWeb
 import play.api.Logger
 
 class CurrentConfig() {
@@ -21,7 +20,7 @@ object WebSocketActor {
   def props(out: ActorRef, request: RequestHeader) = Props(new WebSocketActor(out, request))
 }
 //{"dtoId":6,"dto":"ConfigTree","params":{"configId":"#41:13"}}
-class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor with AdminWeb{
+class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor{
   import play.api.libs.json.JsValue
   def receive: Receive = {
     case msg: JsValue => {
@@ -35,7 +34,7 @@ class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor with A
       
       val uuid = request.session.get("uuid")
       
-      Logger.debug("UUID " + uuid.toString())
+//      Logger.debug("UUID " + uuid.toString())
       (request.session.get("uuid")) match {
         case Some(uuid) => 
           context.become(withUuid(uuid, 1), true)

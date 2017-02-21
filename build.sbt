@@ -58,6 +58,6 @@ libraryDependencies ++= Seq(
   ,orientdbEnterprise
   ,orientdbClient
   ,orientdbTools
-  , admin
+  //, admin
 )
 

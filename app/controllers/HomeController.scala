@@ -10,10 +10,6 @@ import akka.stream.Materializer
 import akka.actor.ActorSystem
 import play.api.libs.json.JsValue
 
-/**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
- */
 @Singleton
 class HomeController @Inject() (implicit system: ActorSystem, materializer: Materializer) extends Controller {
 
