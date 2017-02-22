@@ -19,12 +19,16 @@ class CurrentConfig() {
 object WebSocketActor {
   def props(out: ActorRef, request: RequestHeader) = Props(new WebSocketActor(out, request))
 }
+//http://blog.scalac.io/2015/07/30/websockets-server-with-akka-http.html
+//https://github.com/playframework/play-websocket-scala
+//http://groz.github.io/scala/practical/chat/
+//http://mandubian.com/2013/09/22/play-actor-room/
 //{"dtoId":6,"dto":"ConfigTree","params":{"configId":"#41:13"}}
 class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor{
   import play.api.libs.json.JsValue
   def receive: Receive = {
     case msg: JsValue => {
-      
+      Logger.debug("================")
 //      context.become(withUuid(uuid, 1), true)
 //      val config = new CurrentConfig()
       
@@ -37,9 +41,11 @@ class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor{
 //      Logger.debug("UUID " + uuid.toString())
       (request.session.get("uuid")) match {
         case Some(uuid) => 
+          Logger.debug("receive " + msg.toString())
           context.become(withUuid(uuid, 1), true)
           out ! msg
-        case _ =>
+        case _ => 
+          Logger.debug("Error 1")
       }
       
 //      out ! handelMessage(msg)
@@ -57,12 +63,21 @@ class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor{
   
   def withUuid(uuid: String, countup: Int): Receive = {
     case msg: JsValue => {
-      Logger.debug("Counter " + countup)
-      context.parent ! Json.obj(
+      Logger.debug("vor Case " + msg)
+      ((msg \ "echo").asOpt[Boolean]) match {
+        case Some(true) => 
+          Logger.debug("Counter " + countup)
+          Logger.debug("msg" + msg.toString())
+          context.parent ! Json.obj(
       		  				"answareToMe" -> true,
       		  				"uuid" -> uuid,
       		  				"count" -> countup)
-      context.become(withUuid(uuid,countup+1), true)
+          context.become(withUuid(uuid,countup+1), true)
+        case _ => 
+          Logger.debug("case _ in withUuid " + msg.toString())
+          Logger.debug("Error 2")
+      }
+      
     }
   }
 }

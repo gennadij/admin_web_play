@@ -13,14 +13,37 @@ function createWebsocket(){
 }
 
 function onMessage(message) {
-//    var data = JSON.parse(message.data);
+    var data = JSON.parse(message.data);
     
-    $('#message').text("Received: " + JSON.stringify(e.content));
+    console.log(JSON.stringify(data))
+    
+    $('#message').text("Received: " + data.echo);
 }
 
 function open(e) {
 	console.log("open(e)")
 	$('#status').text("WebSocket: opened").addClass('opened');
+	
+	$('#sendEcho').click(function() {
+		console.log("#sendEcho")
+		e.preventDefault();
+		var obj = {
+			"echo" : true,
+			"toeveryone" : false
+		}
+
+		 socket.send(JSON.stringify(obj))
+	});
+
+	$("#open").click(function() {
+		console.log("#open")
+		e.preventDefault();
+		$('li').removeClass('disabled');
+		$('#open').off('click').addClass('disabled')
+	});
+	
+	
+	
 }
 
 function close(e) {
@@ -29,20 +52,4 @@ function close(e) {
 	$('#message').text("...");
 }
 
-$('#sendEcho').click(function(e) {
-	console.log("#sendEcho")
-	e.preventDefault();
-	var obj = {
-		"echo" : true,
-		"toeveryone" : false
-	}
 
-	 socket.send(obj)
-});
-
-$("#open").click(function(e) {
-	console.log("#open")
-//	e.preventDefault();
-//	$('li').removeClass('disabled');
-//	$('#open').off('click').addClass('disabled')
-});
