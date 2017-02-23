@@ -19,6 +19,7 @@ class CurrentConfig() {
 object WebSocketActor {
   def props(out: ActorRef, request: RequestHeader) = Props(new WebSocketActor(out, request))
 }
+
 //http://blog.scalac.io/2015/07/30/websockets-server-with-akka-http.html
 //https://github.com/playframework/play-websocket-scala
 //http://groz.github.io/scala/practical/chat/
@@ -75,7 +76,7 @@ class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor{
   }
   
   override def postStop() {
-    Logger.debug("Websocket is disconnected!")
+    Logger.debug("Websocket with uuid " + request.session.get("uuid") + " is disconnected!")
   }
   
   def withUuid(uuid: String, countup: Int): Receive = {
