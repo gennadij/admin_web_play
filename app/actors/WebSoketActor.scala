@@ -19,16 +19,34 @@ class CurrentConfig() {
 object WebSocketActor {
   def props(out: ActorRef, request: RequestHeader) = Props(new WebSocketActor(out, request))
 }
+//http://doc.akka.io/docs/akka/current/scala/actors.html
 //http://blog.scalac.io/2015/07/30/websockets-server-with-akka-http.html
 //https://github.com/playframework/play-websocket-scala
 //http://groz.github.io/scala/practical/chat/
 //http://mandubian.com/2013/09/22/play-actor-room/
 //{"dtoId":6,"dto":"ConfigTree","params":{"configId":"#41:13"}}
+
 class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor{
   import play.api.libs.json.JsValue
   def receive: Receive = {
     case msg: JsValue => {
-      Logger.debug("================")
+      Logger.debug("=SessionId: " + request.session.get("uuid"))
+      (msg \ "dto").asOpt[String] match {
+        case Some("StartConfig") => {
+          Logger.debug(msg.toString())
+          out ! msg
+        }
+        case Some("NextStep") => {
+          Logger.debug(msg.toString())
+          out ! msg
+        }
+        case _ => Logger.debug("Error")
+      }
+      
+      
+//      out ! handelMessage(msg)
+    }
+    case _ => Logger.debug("Error")
 //      context.become(withUuid(uuid, 1), true)
 //      val config = new CurrentConfig()
       
@@ -36,20 +54,20 @@ class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor{
       
 //      Logger.debug("Counter " + config.counter)
       
-      val uuid = request.session.get("uuid")
-      
-//      Logger.debug("UUID " + uuid.toString())
-      (request.session.get("uuid")) match {
-        case Some(uuid) => 
-          Logger.debug("receive " + msg.toString())
-          context.become(withUuid(uuid, 1), true)
-          out ! msg
-        case _ => 
-          Logger.debug("Error 1")
-      }
+//      val uuid = request.session.get("uuid")
+//      
+////      Logger.debug("UUID " + uuid.toString())
+//      (request.session.get("uuid")) match {
+//        case Some(uuid) => 
+//          Logger.debug("receive " + msg.toString())
+//          context.become(withUuid(uuid, 1), true)
+//          out ! msg
+//        case _ => 
+//          Logger.debug("Error 1")
+//      }
       
 //      out ! handelMessage(msg)
-    }
+//    }
 //      Logger.debug("Receive " + msg.toString())
 //      (msg \ "dto").asOpt[String] match {
 //        case Some("test") => out ! Json.obj("test" -> "test")
@@ -58,7 +76,7 @@ class WebSocketActor(out: ActorRef, request: RequestHeader) extends Actor{
   }
   
   override def postStop() {
-    Logger.debug("Websocket is disconnected!")
+    Logger.debug("Websocket with uuid " + request.session.get("uuid") + " is disconnected!")
   }
   
   def withUuid(uuid: String, countup: Int): Receive = {
