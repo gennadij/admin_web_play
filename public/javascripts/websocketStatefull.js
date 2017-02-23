@@ -17,29 +17,40 @@ function onMessage(message) {
     
     console.log(JSON.stringify(data))
     
-    $('#message').text("Received: " + data.echo);
+    $('#message').text("Received: " + JSON.stringify(data));
 }
 
 function open(e) {
-	console.log("open(e)")
 	$('#status').text("WebSocket: opened").addClass('opened');
 	
-	$('#sendEcho').click(function() {
+	//set NextStep 
+	
+	$('#StartConfig').click(function() {
 		console.log("#sendEcho")
 		e.preventDefault();
+//		var obj = {
+//			"echo" : true,
+//			"toeveryone" : false
+//		}
+		
 		var obj = {
-			"echo" : true,
-			"toeveryone" : false
+				"dto" : "StartConfig"
 		}
 
 		 socket.send(JSON.stringify(obj))
 	});
 
-	$("#open").click(function() {
+	$("#NextStep").click(function() {
 		console.log("#open")
 		e.preventDefault();
-		$('li').removeClass('disabled');
-		$('#open').off('click').addClass('disabled')
+//		$('li').removeClass('disabled');
+//		$('#open').off('click').addClass('disabled')
+		
+		var obj = {
+				"dto" : "NextStep"
+		}
+
+		 socket.send(JSON.stringify(obj))
 	});
 	
 	
