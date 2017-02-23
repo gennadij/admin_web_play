@@ -19,7 +19,7 @@ class CurrentConfig() {
 object WebSocketActor {
   def props(out: ActorRef, request: RequestHeader) = Props(new WebSocketActor(out, request))
 }
-
+//http://doc.akka.io/docs/akka/current/scala/actors.html
 //http://blog.scalac.io/2015/07/30/websockets-server-with-akka-http.html
 //https://github.com/playframework/play-websocket-scala
 //http://groz.github.io/scala/practical/chat/
